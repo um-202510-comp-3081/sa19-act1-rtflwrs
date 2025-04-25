@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: my-rails-app
+    env: ruby
+    repo: https://github.com/rtflwrs/sa19-act1-rtflwrs1
+    branch: main
+    buildCommand: |
+      bundle install
+      bundle exec rake db:migrate
+      bundle exec rake assets:precompile
+    startCommand: bundle exec rails server -p $PORT
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: my-rails-db
+          property: connectionString
+      - key: SECRET_KEY_BASE
+        generateValue: true
+    autoDeploy: true
+
+databases:
+  - name: my-rails-db
+    databaseName: rails_production
+    user: rails_user
